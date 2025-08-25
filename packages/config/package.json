@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "build": "echo 'Configuration validation complete'",
-    "test": "echo 'Testing configurations...' && node validate-config.js && node validate-rules.js",
-    "lint": "echo 'Linting configuration files...' && node validate-json.js",
+    "test": "node test-config.js && node validate-config.js && node validate-rules.js",
+    "lint": "node validate-json.js",
     "clean": "echo 'No build artifacts to clean'"
   }
 }
