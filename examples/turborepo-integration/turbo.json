@@ -1,0 +1,54 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local", "docker-compose.firebase.yml"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts", "test/**/*.tsx"],
+      "outputs": ["coverage/**"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build", "emulators:start"],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "e2e/**/*.ts", "e2e/**/*.tsx"],
+      "outputs": ["test-results/**", "playwright-report/**"]
+    },
+    "test:integration": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "integration/**/*.ts"],
+      "env": [
+        "FIRESTORE_EMULATOR_HOST",
+        "FIREBASE_AUTH_EMULATOR_HOST",
+        "FIREBASE_STORAGE_EMULATOR_HOST",
+        "FIREBASE_PROJECT_ID"
+      ]
+    },
+    "clean": {
+      "cache": false
+    },
+    "emulators:start": {
+      "cache": false,
+      "persistent": true,
+      "runOnce": true
+    }
+  },
+  "tasks": {
+    "emulators:start": {
+      "command": "npm run emulators",
+      "runOnce": true
+    }
+  },
+  "remoteCache": {
+    "signature": true
+  }
+}

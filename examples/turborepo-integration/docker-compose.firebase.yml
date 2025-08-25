@@ -1,0 +1,70 @@
+# Firebase Emulators for Turborepo Integration
+# Place this file in your Turborepo project root
+# Usage: docker-compose -f docker-compose.firebase.yml up -d
+
+version: '3.8'
+
+services:
+  firebase-emulators:
+    image: charlesgreen/firebase-emulators:latest
+    container_name: turborepo-firebase-emulators
+    restart: unless-stopped
+    
+    # Expose all Firebase emulator ports
+    ports:
+      - "5170:5170"  # Emulator Hub
+      - "5171:5171"  # Auth Emulator
+      - "5172:5172"  # Firestore Emulator
+      - "5174:5174"  # Hosting Emulator
+      - "5175:5175"  # Storage Emulator
+      - "5179:5179"  # Firebase UI
+    
+    environment:
+      # Use your project ID from firebase.json or .env
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-turborepo-project}
+      - GOOGLE_CLOUD_PROJECT=${FIREBASE_PROJECT_ID:-turborepo-project}
+      
+      # Enable/disable emulators as needed
+      - ENABLE_AUTH=${ENABLE_AUTH:-true}
+      - ENABLE_FIRESTORE=${ENABLE_FIRESTORE:-true}
+      - ENABLE_HOSTING=${ENABLE_HOSTING:-true}
+      - ENABLE_STORAGE=${ENABLE_STORAGE:-true}
+      
+      # Seed data for testing (override in CI/development)
+      - SEED_DATA=${SEED_DATA:-false}
+      - SEED_AUTH=${SEED_AUTH:-false}
+      - SEED_FIRESTORE=${SEED_FIRESTORE:-false}
+      
+      # Environment
+      - NODE_ENV=${NODE_ENV:-development}
+    
+    # Optional: Mount your Firebase configuration
+    volumes:
+      # Uncomment if you have custom Firebase config
+      # - ./firebase.json:/app/config/firebase.json:ro
+      # - ./firestore.rules:/app/config/firestore.rules:ro
+      # - ./storage.rules:/app/config/storage.rules:ro
+      
+      # Persistent data for development
+      - firebase_data:/app/data
+    
+    # Health check for dependency management
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5179"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    # Optimize for development
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+# Named volume for persistent data
+volumes:
+  firebase_data:
+    driver: local

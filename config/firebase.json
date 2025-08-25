@@ -1,0 +1,72 @@
+{
+  "projects": {
+    "default": "demo-project"
+  },
+  "emulators": {
+    "auth": {
+      "port": 5171,
+      "host": "0.0.0.0"
+    },
+    "firestore": {
+      "port": 5172,
+      "host": "0.0.0.0",
+      "rules": "firestore.rules"
+    },
+    "hosting": {
+      "port": 5174,
+      "host": "0.0.0.0"
+    },
+    "storage": {
+      "port": 5175,
+      "host": "0.0.0.0",
+      "rules": "storage.rules"
+    },
+    "ui": {
+      "enabled": true,
+      "port": 5179,
+      "host": "0.0.0.0"
+    },
+    "hub": {
+      "port": 5170,
+      "host": "0.0.0.0"
+    },
+    "singleProjectMode": true
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css|html)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=31536000"
+          }
+        ]
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "functions": {
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run lint"
+    ]
+  }
+}

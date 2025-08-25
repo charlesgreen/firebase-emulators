@@ -1,0 +1,107 @@
+{
+  "users": {
+    "user1": {
+      "email": "john.doe@example.com",
+      "displayName": "John Doe",
+      "photoURL": "https://example.com/avatar1.jpg",
+      "createdAt": "2023-01-15T10:30:00Z",
+      "updatedAt": "2023-01-15T10:30:00Z",
+      "preferences": {
+        "theme": "dark",
+        "notifications": true,
+        "language": "en"
+      }
+    },
+    "user2": {
+      "email": "jane.smith@example.com",
+      "displayName": "Jane Smith",
+      "photoURL": "https://example.com/avatar2.jpg",
+      "createdAt": "2023-01-16T14:45:00Z",
+      "updatedAt": "2023-01-16T14:45:00Z",
+      "preferences": {
+        "theme": "light",
+        "notifications": false,
+        "language": "es"
+      }
+    }
+  },
+  "posts": {
+    "post1": {
+      "title": "Getting Started with Firebase Emulators",
+      "content": "Firebase emulators provide a local development environment for testing Firebase services...",
+      "authorId": "user1",
+      "category": "tutorial",
+      "published": true,
+      "createdAt": "2023-01-17T09:00:00Z",
+      "updatedAt": "2023-01-17T09:00:00Z",
+      "tags": ["firebase", "emulators", "development"],
+      "views": 125,
+      "likes": 23
+    },
+    "post2": {
+      "title": "Advanced Firestore Security Rules",
+      "content": "Learn how to create secure and efficient Firestore security rules for your application...",
+      "authorId": "user2",
+      "category": "security",
+      "published": true,
+      "createdAt": "2023-01-18T16:20:00Z",
+      "updatedAt": "2023-01-18T16:20:00Z",
+      "tags": ["firestore", "security", "rules"],
+      "views": 89,
+      "likes": 15
+    },
+    "post3": {
+      "title": "Draft Post Example",
+      "content": "This is a draft post that hasn't been published yet...",
+      "authorId": "user1",
+      "category": "draft",
+      "published": false,
+      "createdAt": "2023-01-19T11:15:00Z",
+      "updatedAt": "2023-01-19T11:15:00Z",
+      "tags": ["draft"],
+      "views": 0,
+      "likes": 0
+    }
+  },
+  "comments": {
+    "comment1": {
+      "postId": "post1",
+      "authorId": "user2",
+      "content": "Great tutorial! Very helpful for getting started.",
+      "createdAt": "2023-01-17T10:30:00Z",
+      "likes": 5
+    },
+    "comment2": {
+      "postId": "post1",
+      "authorId": "user1",
+      "content": "Thanks for the feedback! Glad it was helpful.",
+      "createdAt": "2023-01-17T11:00:00Z",
+      "likes": 2
+    }
+  },
+  "public": {
+    "config": {
+      "appName": "Firebase Emulators Demo",
+      "version": "1.0.0",
+      "maintenanceMode": false,
+      "features": {
+        "comments": true,
+        "likes": true,
+        "userProfiles": true
+      }
+    },
+    "stats": {
+      "totalUsers": 2,
+      "totalPosts": 3,
+      "totalComments": 2,
+      "lastUpdated": "2023-01-19T11:15:00Z"
+    }
+  },
+  "admin": {
+    "settings": {
+      "maxPostsPerUser": 10,
+      "moderationEnabled": true,
+      "autoApproveComments": false
+    }
+  }
+}

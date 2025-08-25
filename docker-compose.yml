@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  firebase-emulators:
+    image: charlesgreen/firebase-emulators:latest
+    container_name: firebase-emulators
+    restart: unless-stopped
+    
+    # Port mapping for all Firebase emulators
+    ports:
+      - "5170:5170"  # Emulator Hub
+      - "5171:5171"  # Auth Emulator
+      - "5172:5172"  # Firestore Emulator
+      - "5174:5174"  # Hosting Emulator
+      - "5175:5175"  # Storage Emulator
+      - "5179:5179"  # Firebase UI
+    
+    # Environment variables for configuration
+    environment:
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-demo-project}
+      - FIREBASE_AUTH_PORT=5171
+      - FIREBASE_FIRESTORE_PORT=5172
+      - FIREBASE_HOSTING_PORT=5174
+      - FIREBASE_STORAGE_PORT=5175
+      - FIREBASE_UI_PORT=5179
+      - FIREBASE_EMULATOR_HUB_PORT=5170
+      - GOOGLE_CLOUD_PROJECT=${FIREBASE_PROJECT_ID:-demo-project}
+      - NODE_ENV=${NODE_ENV:-development}
+      # Enable/disable specific emulators
+      - ENABLE_AUTH=${ENABLE_AUTH:-true}
+      - ENABLE_FIRESTORE=${ENABLE_FIRESTORE:-true}
+      - ENABLE_HOSTING=${ENABLE_HOSTING:-true}
+      - ENABLE_STORAGE=${ENABLE_STORAGE:-true}
+      # Seed data configuration
+      - SEED_DATA=${SEED_DATA:-false}
+      - SEED_AUTH=${SEED_AUTH:-false}
+      - SEED_FIRESTORE=${SEED_FIRESTORE:-false}
+    
+    # Volume mounts for persistent data and custom configuration
+    volumes:
+      # Configuration files
+      - ./config:/app/config:ro
+      # Seed data (optional)
+      - ./seed:/app/seed:ro
+      # Persistent emulator data (optional)
+      - firebase_data:/app/data
+      # Custom scripts (optional)
+      - ./scripts:/app/scripts:ro
+      # Logs
+      - firebase_logs:/app/logs
+    
+    # Health check configuration
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5179"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Security configuration
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    # Logging configuration
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Network configuration
+    networks:
+      - firebase_network
+
+  # Optional: Admin service for managing emulator data
+  firebase-admin:
+    image: charlesgreen/firebase-emulators:latest
+    container_name: firebase-admin
+    profiles: ["admin"]
+    depends_on:
+      - firebase-emulators
+    environment:
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-demo-project}
+      - FIRESTORE_EMULATOR_HOST=firebase-emulators:5172
+      - FIREBASE_AUTH_EMULATOR_HOST=firebase-emulators:5171
+      - FIREBASE_STORAGE_EMULATOR_HOST=firebase-emulators:5175
+    volumes:
+      - ./scripts:/app/scripts:ro
+      - ./seed:/app/seed:ro
+    command: ["./scripts/admin-tools.sh"]
+    networks:
+      - firebase_network
+
+# Named volumes for persistent data
+volumes:
+  firebase_data:
+    driver: local
+  firebase_logs:
+    driver: local
+
+# Custom network for Firebase services
+networks:
+  firebase_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
