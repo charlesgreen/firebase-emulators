@@ -5,38 +5,41 @@ This example shows how to integrate Firebase Emulators into your Turborepo proje
 ## Quick Setup
 
 1. **Copy files to your Turborepo project:**
-   ```bash
-   # Copy the Docker Compose config
-   cp docker-compose.firebase.yml /path/to/your/turborepo/
 
-   # Add scripts to your package.json (see package.json example)
-   ```
+```bash
+# Copy the Docker Compose config
+cp docker-compose.firebase.yml /path/to/your/turborepo/
 
-2. **Add environment variables:**
-   ```bash
-   # .env.local
-   FIREBASE_PROJECT_ID=your-project-id
-   FIRESTORE_EMULATOR_HOST=localhost:5172
-   FIREBASE_AUTH_EMULATOR_HOST=localhost:5171
-   FIREBASE_STORAGE_EMULATOR_HOST=localhost:5175
-   ```
+# Add scripts to your package.json (see package.json example)
+```
 
-3. **Update your turbo.json:**
-   ```json
-   {
-     "pipeline": {
-       "test:integration": {
-         "dependsOn": ["^build"],
-         "env": [
-           "FIRESTORE_EMULATOR_HOST",
-           "FIREBASE_AUTH_EMULATOR_HOST",
-           "FIREBASE_STORAGE_EMULATOR_HOST",
-           "FIREBASE_PROJECT_ID"
-         ]
-       }
-     }
-   }
-   ```
+1. **Add environment variables:**
+
+```bash
+# .env.local
+FIREBASE_PROJECT_ID=your-project-id
+FIRESTORE_EMULATOR_HOST=localhost:5172
+FIREBASE_AUTH_EMULATOR_HOST=localhost:5171
+FIREBASE_STORAGE_EMULATOR_HOST=localhost:5175
+```
+
+1. **Update your turbo.json:**
+
+```json
+{
+  "pipeline": {
+    "test:integration": {
+      "dependsOn": ["^build"],
+      "env": [
+        "FIRESTORE_EMULATOR_HOST",
+        "FIREBASE_AUTH_EMULATOR_HOST",
+        "FIREBASE_STORAGE_EMULATOR_HOST",
+        "FIREBASE_PROJECT_ID"
+      ]
+    }
+  }
+}
+```
 
 ## Usage
 

@@ -31,41 +31,38 @@ curl -sSL https://raw.githubusercontent.com/charlesgreen/firebase-emulators/main
 
 ## Port Reference
 
-| Service | Port | URL |
-|---------|------|-----|
-| **UI Dashboard** | **5179** | **http://localhost:5179** |
-| Auth | 5171 | http://localhost:5171 |
-| Firestore | 5172 | http://localhost:5172 |
-| Storage | 5175 | http://localhost:5175 |
-| Hosting | 5174 | http://localhost:5174 |
-| Hub | 5170 | http://localhost:5170 |
+| Service      | Port | URL                     |
+| ------------ | ---- | ----------------------- |
+| UI Dashboard | 5179 | `http://localhost:5179` |
+| Auth         | 5171 | `http://localhost:5171` |
+| Firestore    | 5172 | `http://localhost:5172` |
+| Storage      | 5175 | `http://localhost:5175` |
+| Hosting      | 5174 | `http://localhost:5174` |
+| Hub          | 5170 | `http://localhost:5170` |
 
 ## Configuration
 
 ### Essential Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `FIREBASE_PROJECT_ID` | `demo-project` | Your Firebase project ID |
-| `SEED_DATA` | `false` | Load sample data for testing |
+| Variable              | Default        | Description                  |
+| --------------------- | -------------- | ---------------------------- |
+| `FIREBASE_PROJECT_ID` | `demo-project` | Your Firebase project ID     |
+| `SEED_DATA`           | `false`        | Load sample data for testing |
 
 ### All Environment Variables
 
-<details>
-<summary>Click to expand full configuration options</summary>
+Click to expand full configuration options
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `FIREBASE_PROJECT_ID` | `demo-project` | Firebase project ID |
-| `ENABLE_AUTH` | `true` | Enable Auth emulator |
-| `ENABLE_FIRESTORE` | `true` | Enable Firestore emulator |
-| `ENABLE_HOSTING` | `true` | Enable Hosting emulator |
-| `ENABLE_STORAGE` | `true` | Enable Storage emulator |
-| `SEED_DATA` | `false` | Enable seed data import |
-| `SEED_AUTH` | `false` | Import auth seed data |
-| `SEED_FIRESTORE` | `false` | Import Firestore seed data |
-
-</details>
+| Variable              | Default        | Description                |
+| --------------------- | -------------- | -------------------------- |
+| `FIREBASE_PROJECT_ID` | `demo-project` | Firebase project ID        |
+| `ENABLE_AUTH`         | `true`         | Enable Auth emulator       |
+| `ENABLE_FIRESTORE`    | `true`         | Enable Firestore emulator  |
+| `ENABLE_HOSTING`      | `true`         | Enable Hosting emulator    |
+| `ENABLE_STORAGE`      | `true`         | Enable Storage emulator    |
+| `SEED_DATA`           | `false`        | Enable seed data import    |
+| `SEED_AUTH`           | `false`        | Import auth seed data      |
+| `SEED_FIRESTORE`      | `false`        | Import Firestore seed data |
 
 ## Common Use Cases
 
@@ -77,6 +74,7 @@ docker run -e SEED_DATA=true -e FIREBASE_PROJECT_ID=my-app -p 5170-5179:5170-517
 ```
 
 **Included test accounts:**
+
 - `admin@example.com` / `password123`
 - `user@example.com` / `password123`
 
@@ -133,6 +131,7 @@ docker pull charlesgreen/firebase-emulators:dev
 ### Quick Fixes
 
 **Can't access emulators?**
+
 ```bash
 # Check if container is running
 docker ps | grep firebase
@@ -142,11 +141,13 @@ docker port firebase-emulators
 ```
 
 **Need debug output?**
+
 ```bash
 docker logs firebase-emulators
 ```
 
 **Performance issues?**
+
 ```bash
 # Monitor resource usage
 docker stats firebase-emulators
@@ -154,11 +155,11 @@ docker stats firebase-emulators
 
 ### Common Issues
 
-| Problem | Solution |
-|---------|----------|
-| Port conflicts | Change port mapping: `-p 6170-6179:5170-5179` |
-| Seed data not loading | Add `SEED_DATA=true` environment variable |
-| Permission errors | Ensure volume mounts have correct permissions |
+| Problem               | Solution                                      |
+| --------------------- | --------------------------------------------- |
+| Port conflicts        | Change port mapping: `-p 6170-6179:5170-5179` |
+| Seed data not loading | Add `SEED_DATA=true` environment variable     |
+| Permission errors     | Ensure volume mounts have correct permissions |
 
 ## Features
 

@@ -39,25 +39,28 @@ networks:
 ## Quick Setup
 
 1. **Copy the example to your project:**
-   ```bash
-   curl -sSL https://raw.githubusercontent.com/charlesgreen/firebase-emulators/main/examples/docker-compose-integration/docker-compose.yml > docker-compose.firebase.yml
-   ```
 
-2. **Merge with your existing docker-compose.yml:**
-   ```bash
-   # Option A: Use multiple compose files
-   docker-compose -f docker-compose.yml -f docker-compose.firebase.yml up -d
+```bash
+curl -sSL https://raw.githubusercontent.com/charlesgreen/firebase-emulators/main/examples/docker-compose-integration/docker-compose.yml > docker-compose.firebase.yml
+```
 
-   # Option B: Copy the firebase-emulators service to your main file
-   ```
+1. **Merge with your existing docker-compose.yml:**
 
-3. **Update your app configuration:**
-   ```javascript
-   // In your app code
-   if (process.env.NODE_ENV === 'development') {
-     connectFirestoreEmulator(db, process.env.FIRESTORE_EMULATOR_HOST || 'localhost', 5172);
-   }
-   ```
+```bash
+# Option A: Use multiple compose files
+docker-compose -f docker-compose.yml -f docker-compose.firebase.yml up -d
+
+# Option B: Copy the firebase-emulators service to your main file
+```
+
+1. **Update your app configuration:**
+
+```javascript
+// In your app code
+if (process.env.NODE_ENV === 'development') {
+  connectFirestoreEmulator(db, process.env.FIRESTORE_EMULATOR_HOST || 'localhost', 5172);
+}
+```
 
 ## Development Commands
 

@@ -48,12 +48,12 @@ docker exec -it firebase-emulators /bin/bash
 
 ## 🔗 Port Reference
 
-| Service | Port | URL |
-|---------|------|-----|
-| **UI Dashboard** | **5179** | **http://localhost:5179** |
-| Auth | 5171 | http://localhost:5171 |
-| Firestore | 5172 | http://localhost:5172 |
-| Storage | 5175 | http://localhost:5175 |
+| Service      | Port | URL                     |
+| ------------ | ---- | ----------------------- |
+| UI Dashboard | 5179 | `http://localhost:5179` |
+| Auth         | 5171 | `http://localhost:5171` |
+| Firestore    | 5172 | `http://localhost:5172` |
+| Storage      | 5175 | `http://localhost:5175` |
 
 ## 👤 Test Accounts
 
@@ -66,12 +66,14 @@ john.doe@example.com / password123
 ## 📝 Environment Variables
 
 ### Essential
+
 ```bash
 FIREBASE_PROJECT_ID=your-project-id
 SEED_DATA=true
 ```
 
 ### Complete List
+
 ```bash
 FIREBASE_PROJECT_ID=demo-project
 ENABLE_AUTH=true
@@ -115,10 +117,10 @@ services:
 
 ```makefile
 firebase-start:
-	docker run -d --name firebase-emulators -p 5170-5179:5170-5179 -e SEED_DATA=true charlesgreen/firebase-emulators:latest
+  docker run -d --name firebase-emulators -p 5170-5179:5170-5179 -e SEED_DATA=true charlesgreen/firebase-emulators:latest
 
 firebase-stop:
-	docker stop firebase-emulators && docker rm firebase-emulators
+  docker stop firebase-emulators && docker rm firebase-emulators
 ```
 
 ### JavaScript/TypeScript
@@ -171,12 +173,12 @@ process.env.FIREBASE_STORAGE_EMULATOR_HOST = 'localhost:5175';
 
 ### Common Issues
 
-| Problem | Solution |
-|---------|----------|
-| Can't access UI | Check `docker ps` and port mapping |
-| Port conflicts | Use `-p 6170-6179:5170-5179` |
-| Seed data not loading | Add `SEED_DATA=true` |
-| Permission errors | Check volume mount permissions |
+| Problem               | Solution                           |
+| --------------------- | ---------------------------------- |
+| Can't access UI       | Check `docker ps` and port mapping |
+| Port conflicts        | Use `-p 6170-6179:5170-5179`       |
+| Seed data not loading | Add `SEED_DATA=true`               |
+| Permission errors     | Check volume mount permissions     |
 
 ### Debug Commands
 
@@ -229,6 +231,6 @@ docker stop test-emulators && docker rm test-emulators
 ## 📖 More Info
 
 - **Full Documentation**: [README.md](README.md)
-- **Docker Hub**: https://hub.docker.com/r/charlesgreen/firebase-emulators
+- **Docker Hub**: `https://hub.docker.com/r/charlesgreen/firebase-emulators`
 - **Examples**: [examples/](examples/)
-- **Issues**: https://github.com/charlesgreen/firebase-emulators/issues
+- **Issues**: `https://github.com/charlesgreen/firebase-emulators/issues`

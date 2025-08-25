@@ -2,14 +2,14 @@
 # Optimized for production with security best practices
 
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Install Firebase CLI and dependencies
 RUN npm install -g firebase-tools@latest && \
     npm cache clean --force
 
 # Runtime stage
-FROM node:18-alpine AS runtime
+FROM node:20-alpine AS runtime
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S firebase && \
