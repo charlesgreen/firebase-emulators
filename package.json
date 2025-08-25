@@ -1,0 +1,46 @@
+{
+  "name": "firebase-emulators",
+  "version": "1.0.0",
+  "description": "Production-ready Firebase Emulators Docker container",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "packageManager": "npm@10.9.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "setup": "turbo run setup",
+    "clean": "turbo run clean",
+    "docker:build": "turbo run docker:build",
+    "docker:push": "turbo run docker:push",
+    "start": "docker-compose up -d",
+    "stop": "docker-compose down",
+    "logs": "docker-compose logs -f",
+    "ci": "turbo run lint test build"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charlesgreen/firebase-emulators.git"
+  },
+  "keywords": [
+    "firebase",
+    "emulators",
+    "docker",
+    "development",
+    "testing"
+  ],
+  "author": "Charles Green",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/charlesgreen/firebase-emulators/issues"
+  },
+  "homepage": "https://github.com/charlesgreen/firebase-emulators#readme"
+}

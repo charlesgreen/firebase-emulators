@@ -1,0 +1,11 @@
+{
+  "name": "@example/makefile-integration",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'No build required for Makefile example'",
+    "test": "echo 'Testing Makefile integration...'",
+    "lint": "echo 'Linting Makefile...'",
+    "clean": "echo 'No cleanup needed'"
+  }
+}

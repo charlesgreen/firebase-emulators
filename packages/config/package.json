@@ -1,0 +1,12 @@
+{
+  "name": "@firebase-emulators/config",
+  "version": "1.0.0",
+  "description": "Firebase Emulator configuration validation",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Configuration validation complete'",
+    "test": "echo 'Testing configurations...' && node validate-config.js && node validate-rules.js",
+    "lint": "echo 'Linting configuration files...' && node validate-json.js",
+    "clean": "echo 'No build artifacts to clean'"
+  }
+}

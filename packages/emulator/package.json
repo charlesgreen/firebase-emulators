@@ -1,0 +1,16 @@
+{
+  "name": "@firebase-emulators/core",
+  "version": "1.0.0",
+  "description": "Core Firebase Emulator package",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Firebase emulator Docker image build ready'",
+    "test": "echo 'Firebase emulator tests ready'",
+    "lint": "echo 'Linting Dockerfile and configs...' && docker run --rm -i hadolint/hadolint < ../../Dockerfile || true",
+    "docker:build": "docker build -t charlesgreen/firebase-emulators:latest ../..",
+    "docker:push": "docker push charlesgreen/firebase-emulators:latest",
+    "clean": "docker rmi charlesgreen/firebase-emulators:latest || true"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

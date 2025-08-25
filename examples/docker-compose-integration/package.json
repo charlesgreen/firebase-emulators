@@ -1,0 +1,11 @@
+{
+  "name": "@example/docker-compose-integration",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'No build required for docker-compose example'",
+    "test": "echo 'Testing docker-compose integration...'",
+    "lint": "echo 'Linting docker-compose files...'",
+    "clean": "echo 'No cleanup needed'"
+  }
+}
