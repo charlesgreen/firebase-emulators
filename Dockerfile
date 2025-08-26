@@ -15,8 +15,8 @@ FROM node:20-alpine AS runtime
 RUN addgroup -g 1001 -S firebase && \
     adduser -S firebase -u 1001 -G firebase
 
-# Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init curl jq
+# Install dumb-init for proper signal handling and bash for scripts
+RUN apk add --no-cache dumb-init curl jq bash
 
 # Copy Firebase CLI from builder stage
 COPY --from=builder /usr/local/lib/node_modules/firebase-tools /usr/local/lib/node_modules/firebase-tools
