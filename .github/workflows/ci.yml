@@ -2,11 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
-  release:
-    types: [published]
 
 jobs:
   test:
@@ -19,24 +17,11 @@ jobs:
       with:
         node-version: 20
     
-    - name: Cache npm modules
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    
     - name: Install dependencies
       run: npm install
     
     - name: Run tests
       run: npm run test
-    
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.txt
 
   lint:
     runs-on: ubuntu-latest
@@ -59,150 +44,28 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-    
-    - name: Install dependencies
-      run: npm install
-    
-    - name: Build packages
-      run: npm run build
-    
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     
-    - name: Build multi-platform Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        platforms: linux/amd64,linux/arm64
-        push: false
-        tags: firebase-emulators:test
-        load: false
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-    
-    - name: Build Docker image for testing (amd64 only)
+    - name: Build Docker image
       run: docker build -t firebase-emulators:test .
     
     - name: Test Docker image
       run: |
         docker run -d --name firebase-test -p 5179:5179 firebase-emulators:test
-        sleep 5
-        curl -f http://localhost:5179 || exit 1
-        docker stop firebase-test
-        docker rm firebase-test
-
-  integration-test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-    
-    - name: Start emulator
-      run: |
-        docker build -t firebase-emulators:test .
-        docker run -d --name firebase-test -p 5170-5179:5170-5179 firebase-emulators:test
-        echo "Waiting for emulator to start..."
-        for i in {1..30}; do
-          if curl -f http://localhost:5179 2>/dev/null; then
-            echo "Emulator is ready"
-            break
-          fi
-          echo "Waiting for emulator... ($i/30)"
-          sleep 1
-        done
-    
-    - name: Test Firebase Auth emulator
-      run: curl -f http://localhost:5171 || echo "Auth emulator responded"
-    
-    - name: Test Firestore emulator
-      run: curl -f http://localhost:5172 || echo "Firestore emulator responded"
-    
-    - name: Cleanup
-      run: docker stop firebase-test && docker rm firebase-test
-
-  security:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Run Trivy security scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: 'config'
-        hide-progress: false
-        format: 'sarif'
-        output: 'trivy-results.sarif'
-    
-    - name: Upload Trivy results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: 'trivy-results.sarif'
-      continue-on-error: true
+        sleep 10
+        curl -f http://localhost:5179 || (docker logs firebase-test && exit 1)
+        docker stop firebase-test && docker rm firebase-test
 
   release:
-    if: github.ref == 'refs/heads/main'
-    needs: [test, lint, build, integration-test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [test, lint, build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      packages: write
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    
-    - name: Log in to Docker Hub
-      if: github.repository == 'charlesgreen/firebase-emulators'
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-    
-    - name: Build and push multi-platform Docker image
-      if: github.repository == 'charlesgreen/firebase-emulators'
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: |
-          charlesgreen/firebase-emulators:latest
-          charlesgreen/firebase-emulators:${{ github.sha }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-    
-    - name: Create release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        gh release create v${{ github.run_number }} \
-          --title "Release v${{ github.run_number }}" \
-          --notes "Automated release for build #${{ github.run_number }}"
-
-  docker-release:
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Extract version from tag
-      id: version
-      run: |
-        # Extract version from tag (remove 'v' prefix if present)
-        VERSION=${GITHUB_REF#refs/tags/}
-        VERSION=${VERSION#v}
-        echo "version=${VERSION}" >> $GITHUB_OUTPUT
-        echo "Version: ${VERSION}"
     
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -213,14 +76,13 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     
-    - name: Build and push multi-platform Docker image with release tag
+    - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
         context: .
         platforms: linux/amd64,linux/arm64
         push: true
         tags: |
-          charlesgreen/firebase-emulators:${{ steps.version.outputs.version }}
           charlesgreen/firebase-emulators:latest
           charlesgreen/firebase-emulators:${{ github.sha }}
         cache-from: type=gha

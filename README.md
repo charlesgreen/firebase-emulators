@@ -1,45 +1,33 @@
-# Firebase Emulators
+# Firebase Emulators Docker
 
-Production-ready Docker container for Firebase emulators with zero-config setup. Built with Turborepo for efficient development and CI/CD pipelines.
+Production-ready Docker container for Firebase emulator suite.
 
-## Ultra-Quick Start
+[![CI](https://github.com/charlesgreen/firebase-emulators/actions/workflows/ci.yml/badge.svg)](https://github.com/charlesgreen/firebase-emulators/actions/workflows/ci.yml)
+[![Docker Hub](https://img.shields.io/docker/pulls/charlesgreen/firebase-emulators.svg)](https://hub.docker.com/r/charlesgreen/firebase-emulators)
 
-```bash
-# Docker (Recommended)
-docker run -p 5170-5179:5170-5179 charlesgreen/firebase-emulators:latest
-
-# Docker Compose
-curl -sSL https://raw.githubusercontent.com/charlesgreen/firebase-emulators/main/docker-compose.yml | docker-compose -f - up -d
-```
-
-**Firebase UI**: http://localhost:5179
-
-## Development
+## Quick Start
 
 ```bash
-# Turborepo commands
-npm run build    # Build all packages
-npm run test     # Test all packages  
-npm run lint     # Lint all packages
-npm run clean    # Clean build artifacts
-
-# Docker commands
-npm run start    # Start emulators
-npm run stop     # Stop emulators
-npm run logs     # View logs
+docker run -d -p 5170-5179:5170-5179 charlesgreen/firebase-emulators:latest
 ```
 
-## Integration
+Access the Emulator UI at http://localhost:5179
 
-### Turborepo Projects
+## Features
 
-```json
-{
-  "scripts": {
-    "emulators": "docker run -d -p 5170-5179:5170-5179 charlesgreen/firebase-emulators:latest",
-    "test:integration": "npm run emulators && vitest run && docker stop firebase"
-  }
-}
+- Zero configuration required
+- Multi-platform support (linux/amd64, linux/arm64)
+- Security hardened with non-root user
+- Health checks included
+- Optional seed data for testing
+- All Firebase emulators pre-configured
+
+## Installation
+
+### Docker
+
+```bash
+docker pull charlesgreen/firebase-emulators:latest
 ```
 
 ### Docker Compose
@@ -48,78 +36,73 @@ npm run logs     # View logs
 services:
   firebase:
     image: charlesgreen/firebase-emulators:latest
-    ports: ["5170-5179:5170-5179"]
+    ports:
+      - "5170-5179:5170-5179"
     environment:
       - SEED_DATA=true
 ```
 
-### GitHub Actions
+## Port Configuration
 
-```yaml
-services:
-  firebase:
-    image: charlesgreen/firebase-emulators:latest
-    ports: [5170-5179:5170-5179]
+| Service   | Port | URL                     |
+| --------- | ---- | ----------------------- |
+| Hub       | 5170 | `http://localhost:5170` |
+| Auth      | 5171 | `http://localhost:5171` |
+| Firestore | 5172 | `http://localhost:5172` |
+| Hosting   | 5174 | `http://localhost:5174` |
+| Storage   | 5175 | `http://localhost:5175` |
+| UI        | 5179 | `http://localhost:5179` |
+
+## Environment Variables
+
+| Variable              | Default        | Description                 |
+| --------------------- | -------------- | --------------------------- |
+| `FIREBASE_PROJECT_ID` | `demo-project` | Firebase project ID         |
+| `SEED_DATA`           | `false`        | Load sample data on startup |
+
+## Development
+
+### Prerequisites
+
+- Node.js 20+
+- Docker
+- npm
+
+### Setup
+
+```bash
+npm install
+npm run build
+npm run test
 ```
 
-## Port Reference
+### Build Docker Image
 
-| Service      | Port | URL                     |
-| ------------ | ---- | ----------------------- |
-| UI Dashboard | 5179 | `http://localhost:5179` |
-| Auth         | 5171 | `http://localhost:5171` |
-| Firestore    | 5172 | `http://localhost:5172` |
-| Storage      | 5175 | `http://localhost:5175` |
-| Hosting      | 5174 | `http://localhost:5174` |
-| Hub          | 5170 | `http://localhost:5170` |
-
-## Configuration
-
-| Variable              | Default        | Description                  |
-| --------------------- | -------------- | ---------------------------- |
-| `FIREBASE_PROJECT_ID` | `demo-project` | Your Firebase project ID     |
-| `SEED_DATA`           | `false`        | Load sample data for testing |
-| `SEED_AUTH`           | `false`        | Import test accounts         |
-| `SEED_FIRESTORE`      | `false`        | Import Firestore test data   |
-
-**Test accounts** (when `SEED_AUTH=true`):
-- `admin@example.com` / `password123`
-- `user@example.com` / `password123`
-
-## Repository Structure
-
-```
-firebase-emulators/
-├── packages/
-│   ├── emulator/        # Core Docker package
-│   ├── config/          # Configuration validation
-│   ├── example-go-api/  # Go integration example
-│   └── example-react-app/ # React integration example
-├── examples/            # Integration patterns
-├── config/              # Firebase configurations
-├── scripts/             # Utility scripts
-├── seed/                # Test data
-└── turbo.json           # Turborepo configuration
+```bash
+docker build -t firebase-emulators .
 ```
 
-## Examples
+### Run Tests
 
-See `/examples` directory for:
-- **Turborepo integration** - Full workspace setup
-- **Docker Compose integration** - Service dependencies  
-- **Makefile integration** - Build system integration
+```bash
+npm run test
+npm run lint
+```
 
-## Features
 
-- ✅ **Turborepo optimized** - Parallel builds and testing
-- ✅ **Zero-config setup** - Works out of the box
-- ✅ **Multi-platform** - linux/amd64, linux/arm64
-- ✅ **CI/CD ready** - Automated Docker Hub publishing
-- ✅ **Security hardened** - Non-root user, health checks
-- ✅ **Seed data included** - Ready-to-use test accounts
+## Contributing
 
-## Links
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-- **Docker Hub**: [charlesgreen/firebase-emulators](https://hub.docker.com/r/charlesgreen/firebase-emulators)
-- **Examples**: [examples/](examples/)
-- **Quick Reference**: [QUICKSTART.md](QUICKSTART.md)
+## License
+
+MIT License - see the [LICENSE](LICENSE) file for details
+
+## Support
+
+- [Issues](https://github.com/charlesgreen/firebase-emulators/issues)
+- [Docker Hub](https://hub.docker.com/r/charlesgreen/firebase-emulators)

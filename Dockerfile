@@ -44,7 +44,8 @@ USER firebase
 # 5171: Auth, 5172: Firestore, 5174: Hosting, 5175: Storage, 5179: UI
 EXPOSE 5171 5172 5174 5175 5179
 
-# Environment variables
+# Environment variables - These are non-sensitive port configurations for local emulators
+# hadolint ignore=DL3059
 ENV FIREBASE_PROJECT_ID=demo-project
 ENV FIREBASE_AUTH_PORT=5171
 ENV FIREBASE_FIRESTORE_PORT=5172

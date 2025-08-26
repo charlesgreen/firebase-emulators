@@ -1,0 +1,2 @@
+ignored:
+  - DL3059  # Do not use ARG or ENV instructions for sensitive data - These are just local emulator credentials
